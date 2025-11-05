@@ -18,10 +18,12 @@ def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            user = form.save()  # This will trigger the signal to create UserProfile
             login(request, user)
             messages.success(request, 'Account created successfully!')
             return redirect('dashboard')
+        else:
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = CustomUserCreationForm()
     return render(request, 'register.html', {'form': form})
@@ -33,10 +35,13 @@ def custom_logout(request):
     return redirect('home')
 
 @login_required
+@login_required
 def dashboard(request):
+    # The signal should have created the profile, but handle if it doesn't exist
     try:
         profile = request.user.userprofile
     except UserProfile.DoesNotExist:
+        # If profile doesn't exist (shouldn't happen with signals), create it
         profile = UserProfile.objects.create(user=request.user, phone='', address='')
     
     pickup_requests = PickupRequest.objects.filter(user=request.user).order_by('-created_at')
