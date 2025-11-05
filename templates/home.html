@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="bg-gradient-to-r from-green-400 to-green-600 text-white py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-5xl font-bold mb-6">Smart Waste Collection Made Simple</h1>
+        <p class="text-xl mb-8">Request pickups, earn rewards, and contribute to a cleaner environment</p>
+        
+        {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}" class="bg-white text-green-600 hover:bg-green-100 px-8 py-4 rounded-lg text-lg font-semibold transition duration-300 transform hover:scale-105 shadow-2xl">
+                🗑️ Go to Dashboard
+            </a>
+        {% else %}
+            <a href="{% url 'register' %}" class="bg-white text-green-600 hover:bg-green-100 px-8 py-4 rounded-lg text-lg font-semibold transition duration-300 transform hover:scale-105 shadow-2xl">
+                Get Started - Join Now
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Waste Categories Section -->
+<div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+    <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Waste Categories</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Wet Waste -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 text-center transform hover:scale-105 transition duration-300 border-2 border-blue-200">
+            <div class="text-5xl mb-4">💧</div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">Wet Waste</h3>
+            <p class="text-gray-600">Food scraps, vegetables, organic waste</p>
+            <div class="mt-4 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">+5 points</div>
+        </div>
+
+        <!-- Dry Waste -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 text-center transform hover:scale-105 transition duration-300 border-2 border-yellow-200">
+            <div class="text-5xl mb-4">📦</div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">Dry Waste</h3>
+            <p class="text-gray-600">Paper, plastic, packaging materials</p>
+            <div class="mt-4 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium">+5 points</div>
+        </div>
+
+        <!-- Recyclable -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 text-center transform hover:scale-105 transition duration-300 border-2 border-green-200">
+            <div class="text-5xl mb-4">♻️</div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">Recyclable</h3>
+            <p class="text-gray-600">Glass, metal, cardboard, electronics</p>
+            <div class="mt-4 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">+10 points</div>
+        </div>
+
+        <!-- Hazardous -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 text-center transform hover:scale-105 transition duration-300 border-2 border-red-200">
+            <div class="text-5xl mb-4">⚠️</div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">Hazardous</h3>
+            <p class="text-gray-600">Batteries, chemicals, medical waste</p>
+            <div class="mt-4 bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium">Special handling</div>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works -->
+<div class="bg-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">How It Works</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center">
+                <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-2xl">1️⃣</span>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Select Waste Type</h3>
+                <p class="text-gray-600">Choose from our 4 waste categories</p>
+            </div>
+            <div class="text-center">
+                <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-2xl">2️⃣</span>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Request Pickup</h3>
+                <p class="text-gray-600">Schedule a collection at your convenience</p>
+            </div>
+            <div class="text-center">
+                <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-2xl">3️⃣</span>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Earn Rewards</h3>
+                <p class="text-gray-600">Get points for proper waste segregation</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

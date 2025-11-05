@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div class="bg-white rounded-2xl shadow-xl p-8">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Request Waste Pickup</h2>
+        
+        <form method="POST" class="space-y-6" id="pickupForm">
+            {% csrf_token %}
+            
+            <!-- Waste Type Selection -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-4">Select Waste Type</label>
+                <div class="grid grid-cols-2 gap-4" id="wasteTypeContainer">
+                    <label class="relative">
+                        <input type="radio" name="waste_type" value="wet" class="sr-only" required>
+                        <div class="border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer transition duration-300 waste-type-card" data-value="wet">
+                            <div class="text-3xl mb-2">💧</div>
+                            <div class="font-semibold">Wet Waste</div>
+                            <div class="text-sm text-gray-500">Food, organic</div>
+                            <div class="text-xs text-blue-600 mt-1">+5 points</div>
+                        </div>
+                    </label>
+                    
+                    <label class="relative">
+                        <input type="radio" name="waste_type" value="dry" class="sr-only">
+                        <div class="border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer transition duration-300 waste-type-card" data-value="dry">
+                            <div class="text-3xl mb-2">📦</div>
+                            <div class="font-semibold">Dry Waste</div>
+                            <div class="text-sm text-gray-500">Paper, plastic</div>
+                            <div class="text-xs text-yellow-600 mt-1">+5 points</div>
+                        </div>
+                    </label>
+                    
+                    <label class="relative">
+                        <input type="radio" name="waste_type" value="recyclable" class="sr-only">
+                        <div class="border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer transition duration-300 waste-type-card" data-value="recyclable">
+                            <div class="text-3xl mb-2">♻️</div>
+                            <div class="font-semibold">Recyclable</div>
+                            <div class="text-sm text-gray-500">Glass, metal</div>
+                            <div class="text-xs text-green-600 mt-1">+10 points</div>
+                        </div>
+                    </label>
+                    
+                    <label class="relative">
+                        <input type="radio" name="waste_type" value="hazardous" class="sr-only">
+                        <div class="border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer transition duration-300 waste-type-card" data-value="hazardous">
+                            <div class="text-3xl mb-2">⚠️</div>
+                            <div class="font-semibold">Hazardous</div>
+                            <div class="text-sm text-gray-500">Batteries, chemicals</div>
+                            <div class="text-xs text-red-600 mt-1">Special handling</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Quantity Selection -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-4">Select Quantity</label>
+                <div class="grid grid-cols-3 gap-4" id="quantityContainer">
+                    <label class="relative">
+                        <input type="radio" name="quantity" value="small" class="sr-only" required>
+                        <div class="border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer transition duration-300 quantity-card" data-value="small">
+                            <div class="text-2xl mb-2">🟢</div>
+                            <div class="font-semibold">Small</div>
+                            <div class="text-sm text-gray-500">1-2 kg</div>
+                        </div>
+                    </label>
+                    
+                    <label class="relative">
+                        <input type="radio" name="quantity" value="medium" class="sr-only">
+                        <div class="border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer transition duration-300 quantity-card" data-value="medium">
+                            <div class="text-2xl mb-2">🟡</div>
+                            <div class="font-semibold">Medium</div>
+                            <div class="text-sm text-gray-500">3-5 kg</div>
+                        </div>
+                    </label>
+                    
+                    <label class="relative">
+                        <input type="radio" name="quantity" value="large" class="sr-only">
+                        <div class="border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer transition duration-300 quantity-card" data-value="large">
+                            <div class="text-2xl mb-2">🔴</div>
+                            <div class="font-semibold">Large</div>
+                            <div class="text-sm text-gray-500">5+ kg</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-lg transition duration-300 transform hover:scale-105 text-lg">
+                Submit Pickup Request
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Waste type selection
+    const wasteTypeCards = document.querySelectorAll('.waste-type-card');
+    wasteTypeCards.forEach(card => {
+        card.addEventListener('click', function() {
+            // Remove active class from all cards
+            wasteTypeCards.forEach(c => c.classList.remove('border-green-500', 'bg-green-50'));
+            // Add active class to clicked card
+            this.classList.add('border-green-500', 'bg-green-50');
+            // Check the radio input
+            const radio = this.querySelector('input[type="radio"]');
+            radio.checked = true;
+        });
+    });
+
+    // Quantity selection
+    const quantityCards = document.querySelectorAll('.quantity-card');
+    quantityCards.forEach(card => {
+        card.addEventListener('click', function() {
+            // Remove active class from all cards
+            quantityCards.forEach(c => c.classList.remove('border-green-500', 'bg-green-50'));
+            // Add active class to clicked card
+            this.classList.add('border-green-500', 'bg-green-50');
+            // Check the radio input
+            const radio = this.querySelector('input[type="radio"]');
+            radio.checked = true;
+        });
+    });
+
+    // Form validation
+    document.getElementById('pickupForm').addEventListener('submit', function(e) {
+        const wasteTypeSelected = document.querySelector('input[name="waste_type"]:checked');
+        const quantitySelected = document.querySelector('input[name="quantity"]:checked');
+        
+        if (!wasteTypeSelected || !quantitySelected) {
+            e.preventDefault();
+            alert('Please select both waste type and quantity before submitting.');
+        }
+    });
+});
+</script>
+
+<style>
+.waste-type-card:hover, .quantity-card:hover {
+    border-color: #10B981;
+    background-color: #ECFDF5;
+}
+</style>
+{% endblock %}

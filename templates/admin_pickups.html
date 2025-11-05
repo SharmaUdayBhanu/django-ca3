@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <!-- Admin Header -->
+    <div class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-eco-green-500 p-3 rounded-xl">
+                        <i class="fas fa-shield-alt text-white text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">Pickup Management</h1>
+                        <p class="text-sm text-gray-500">Manage all pickup requests</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <a href="{% url 'admin_dashboard' %}" 
+                       class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition duration-200">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Navigation -->
+    <div class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="flex space-x-8 py-4">
+                <a href="{% url 'admin_dashboard' %}" 
+                   class="text-gray-500 hover:text-gray-700 font-medium py-2 transition duration-200">
+                    <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                </a>
+                <a href="{% url 'admin_users' %}" 
+                   class="text-gray-500 hover:text-gray-700 font-medium py-2 transition duration-200">
+                    <i class="fas fa-users mr-2"></i>Users
+                </a>
+                <a href="{% url 'admin_pickups' %}" 
+                   class="text-eco-green-600 border-b-2 border-eco-green-600 font-medium py-2">
+                    <i class="fas fa-trash-alt mr-2"></i>Pickups
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <div class="flex flex-wrap items-center gap-4">
+                <span class="text-sm font-medium text-gray-700">Filter by status:</span>
+                <a href="{% url 'admin_pickups' %}" 
+                   class="px-4 py-2 rounded-lg {% if not current_status %}bg-eco-green-500 text-white{% else %}bg-gray-200 text-gray-700 hover:bg-gray-300{% endif %} transition duration-200">
+                    All
+                </a>
+                <a href="{% url 'admin_pickups' %}?status=pending" 
+                   class="px-4 py-2 rounded-lg {% if current_status == 'pending' %}bg-yellow-500 text-white{% else %}bg-gray-200 text-gray-700 hover:bg-gray-300{% endif %} transition duration-200">
+                    Pending
+                </a>
+                <a href="{% url 'admin_pickups' %}?status=picked" 
+                   class="px-4 py-2 rounded-lg {% if current_status == 'picked' %}bg-blue-500 text-white{% else %}bg-gray-200 text-gray-700 hover:bg-gray-300{% endif %} transition duration-200">
+                    Picked Up
+                </a>
+                <a href="{% url 'admin_pickups' %}?status=completed" 
+                   class="px-4 py-2 rounded-lg {% if current_status == 'completed' %}bg-eco-green-500 text-white{% else %}bg-gray-200 text-gray-700 hover:bg-gray-300{% endif %} transition duration-200">
+                    Completed
+                </a>
+            </div>
+        </div>
+
+        <!-- Pickups Table -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <!-- Table Header -->
+            <div class="bg-gradient-to-r from-eco-green-600 to-eco-green-500 px-6 py-4">
+                <h2 class="text-xl font-semibold text-white flex items-center">
+                    <i class="fas fa-trash-alt mr-2"></i>Pickup Requests ({{ pickups.count }})
+                </h2>
+            </div>
+
+            <!-- Pickups Table -->
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Waste Type</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for pickup in pickups %}
+                        <tr class="hover:bg-gray-50 transition duration-150">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="bg-eco-green-100 p-2 rounded-lg mr-3">
+                                        <i class="fas fa-user text-eco-green-600"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-900">{{ pickup.user.username }}</div>
+                                        <div class="text-sm text-gray-500">{{ pickup.user.email|default:"No email" }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="text-2xl mr-3">
+                                        {% if pickup.waste_type == 'wet' %}💧
+                                        {% elif pickup.waste_type == 'dry' %}📦
+                                        {% elif pickup.waste_type == 'recyclable' %}♻️
+                                        {% else %}⚠️{% endif %}
+                                    </div>
+                                    <div class="text-sm font-medium text-gray-900">{{ pickup.get_waste_type_display }}</div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-3 py-1 rounded-full text-xs font-semibold 
+                                    {% if pickup.quantity == 'small' %}bg-eco-green-100 text-eco-green-800
+                                    {% elif pickup.quantity == 'medium' %}bg-yellow-100 text-yellow-800
+                                    {% else %}bg-red-100 text-red-800{% endif %}">
+                                    {{ pickup.get_quantity_display }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ pickup.created_at|date:"M d, Y" }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-3 py-1 rounded-full text-xs font-medium 
+                                    {% if pickup.status == 'pending' %}bg-yellow-100 text-yellow-800
+                                    {% elif pickup.status == 'picked' %}bg-blue-100 text-blue-800
+                                    {% else %}bg-eco-green-100 text-eco-green-800{% endif %}">
+                                    {{ pickup.get_status_display }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <form method="POST" action="{% url 'update_pickup_status' pickup.id %}" class="inline">
+                                    {% csrf_token %}
+                                    <select name="status" onchange="this.form.submit()" 
+                                            class="text-sm border border-gray-300 rounded-lg px-2 py-1 focus:ring-2 focus:ring-eco-green-500 focus:border-transparent">
+                                        <option value="pending" {% if pickup.status == 'pending' %}selected{% endif %}>Pending</option>
+                                        <option value="picked" {% if pickup.status == 'picked' %}selected{% endif %}>Picked Up</option>
+                                        <option value="completed" {% if pickup.status == 'completed' %}selected{% endif %}>Completed</option>
+                                    </select>
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                                <i class="fas fa-inbox text-4xl mb-4"></i>
+                                <p>No pickup requests found</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
